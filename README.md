@@ -130,7 +130,7 @@ google.com
 
 ## 致谢 (Acknowledgements)
 
-本项目GitFerret的开发灵感来源于`gitdork_rev`及其前身Gitdorks_go、GitDorker。在原有概念的基础上，我对程序架构、核心扫描逻辑及用户体验进行了完全的重构和功能增强，旨在打造一个更高效、更精准的GitHub敏感信息自动化收集工具。在此对原作者的开创性工作表示感谢。
+本项目GitFerret的开发灵感来源于`tokens.txt``gitdork_rev`及其前身Gitdorks_go、GitDorker。在原有概念的基础上，我对程序架构、核心扫描逻辑及用户体验进行了完全的重构和功能增强，旨在打造一个更高效、更精准的GitHub敏感信息自动化收集工具。在此对原作者的开创性工作表示感谢。
 
 ## 免责声明 (Disclaimer)
 
