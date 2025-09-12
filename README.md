@@ -1,6 +1,6 @@
 # GitFerret - An Efficient GitHub Sensitive Information Scanning Tool
 
-## [Chinese](English/GitFerret/README_CN.md)
+## [中文](English/GitFerret/README_CN.md)
 
 GitFerret is a command-line tool written in Go, designed to help security researchers and developers efficiently scan GitHub repositories for potential sensitive information leaks, such as API keys, passwords, and private keys, using custom search rules (Dorks).
 
