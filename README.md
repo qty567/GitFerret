@@ -1,6 +1,6 @@
 # GitFerret - 高效的GitHub敏感信息扫描工具
 
-## **[English](English/GitFerret/README.md)**
+## [English](English/GitFerret/README.md)
 
 GitFerret 是一款使用Go语言编写的命令行工具，旨在帮助安全研究人员和开发人员通过自定义的搜索规则（Dorks），高效地扫描GitHub上的代码仓库，以发现潜在的敏感信息泄露，例如API密钥、密码、私钥等。
 
@@ -84,6 +84,8 @@ bash build.sh
 # 使用 Dorks 文件夹下的 alldorksv3.txt 规则文件
 ./GitFerret.exe -d \GitFerret\Dorks\alldorksv3.txt -tl \GitFerret\tl.txt -tf \GitFerret\tf.txt
 ```
+
+<img width="2529" height="1292" alt="wechat_2025-09-12_151155_811" src="https://github.com/user-attachments/assets/b614b8ba-78f4-4a9c-8889-aa6f805d7094" />
 
 **3. 命令行参数说明**
 
