@@ -1,126 +1,123 @@
-# GitFerret - An Efficient GitHub Sensitive Information Scanning Tool
+# GitFerret - 高效的GitHub敏感信息扫描工具
 
-## [中文](English/GitFerret/README_CN.md)
+## [English](README_EN.md)
 
-GitFerret is a command-line tool written in Go, designed to help security researchers and developers efficiently scan GitHub repositories for potential sensitive information leaks, such as API keys, passwords, and private keys, using custom search rules (Dorks).
+GitFerret 是一款使用Go语言编写的命令行工具，旨在帮助安全研究人员和开发人员通过自定义的搜索规则（Dorks），高效地扫描GitHub上的代码仓库，以发现潜在的敏感信息泄露，例如API密钥、密码、私钥等。
 
-The design of this tool draws inspiration from excellent open-source projects like GitDorker, with significant optimizations in performance, concurrency handling, and rule precision to achieve a lower false positive rate and a more stable scanning experience.
+本工具的设计思想借鉴了 GitDorker 等优秀的开源项目，并在性能、并发处理和规则精确度上进行了大量优化，以实现更低的误报率和更稳定的扫描体验。
 
-### ✨ Features
+✨ 功能特性
 
-- **High-Concurrency Scanning**: Leverages Go's concurrency features to support multi-threaded scanning tasks, greatly increasing scanning speed.
-- **Multi-Token Support**: Supports loading multiple GitHub Personal Access Tokens (PATs) from a file, effectively circumventing API rate limits by rotating through them.
-- **Flexible Targets & Rules**: Allows for batch importing of scanning targets (e.g., domains, company names) and search rules (Dorks) from files.
-- **Low False-Positive Rate**: Utilizes built-in, optimized, and stricter regular expression rules that distinguish between high-risk filenames and file contents, effectively reducing invalid alerts.
-- **Real-Time Results Output**: Any sensitive information found during the scan is immediately written to the specified output file without waiting for the task to complete.
-- **User-Friendly Progress Bar**: Intuitively displays the real-time progress of the scanning task, the number of completed items, and the estimated time remaining in the command line.
-- **Automatic Rate Limit Handling**: Can automatically detect GitHub API rate limits, wait silently in the background, and resume automatically once the limit is lifted, requiring no manual intervention.
-- **Smart Output Path**: Prioritizes saving the results file in the current directory. If a permission error is encountered, it will automatically attempt to save the file to your user home directory, ensuring the program runs smoothly.
+- **高并发扫描**：利用Go语言的并发特性，支持多线程同时执行扫描任务，大幅提升扫描速度。
+- **多令牌支持**：支持从文件中加载多个GitHub个人访问令牌（PAT），通过轮换使用有效规避API速率限制。
+- **灵活的目标与规则**：支持通过文件批量导入扫描目标（如域名、公司名）和搜索规则（Dorks）。
+- **低误报率**：内置经过优化的、更严格的正则表达式规则，区分高危文件名和文件内容，有效降低无效告警。
+- **实时结果输出**：扫描过程中发现的任何敏感信息都会被立即写入指定的输出文件，无需等待任务结束。
+- **用户友好的进度条**：在命令行中直观地显示扫描任务的实时进度、已完成数量和预计剩余时间。
+- **自动速率限制处理**：能自动检测GitHub API的速率限制，并在后台静默等待，任务完成后自动恢复，无需人工干预。
+- **智能输出路径**：优先在程序当前目录保存结果文件。如果遇到权限错误，会自动尝试将文件保存到您的个人主目录，确保程序顺利运行。
 
-### 🛠️ Installation & Configuration
+🛠️ 安装与配置
 
-**1. Environment Requirements**
+**1. 环境要求**
 
-- Go programming language environment (version >= 1.16)
+- Go 语言环境 (版本 >= 1.16)
 
-**2. Download & Compile**
-
-Clone or download the project to your local machine:
+**2. 下载与编译** 将项目克隆或下载到您的本地机器上：
 
 ```
-# Navigate to the project directory
+# 进入代码所在目录
 cd /path/to/your/project
 ```
 
-Download all dependencies:
+下载所有依赖包。如果您在中国大陆，请先设置Go代理：
 
 ```
-# Download dependencies
+# (可选，仅中国大陆用户需要)
+go env -w GOPROXY=[https://goproxy.cn](https://goproxy.cn),direct
+
+# 下载依赖
 go mod tidy
 ```
 
-Compile to generate the executable file:
+编译生成可执行文件：
 
 ```
-bash build.sh
+bash build.sh 
 ```
 
-After a successful compilation, you will find an executable file named `GitFerret_amd_linux` (Linux/macOS), `GitFerret_darwin` (macOS), or `GitFerret.exe` (Windows) in the `release` directory.
+编译成功后，您将在`release`目录下看到一个名为 `GitFerret_amd_linux` (Linux/macOS) 、`GitFerret_darwin` (Linux/macOS) 、`GitFerret.exe` (Windows) 的可执行文件。
 
-### 🚀 Usage
+🚀 使用方法
 
-**1. Prepare Files**
+**1. 准备文件** 在运行程序前，您需要准备以下文本文件：
 
-Before running the program, you need to prepare the following text files:
-
-- **Token File (`tf.txt`)**: Contains your GitHub Personal Access Tokens, one per line.
+- **令牌文件 (`tf.txt`)**: 每行存放一个您的GitHub个人访问令牌。
 
   ```
   ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   ghp_yyyyyyyyyyyyyyyyyyyyyyyyyyyyy
   ```
 
-- **Target File (`tl.txt`)**: Contains the scanning targets, one per line, such as a company domain or name (no prefixes like `org:` are needed).
+- **目标文件 (`tl.txt`)**: 每行存放一个扫描目标，例如公司域名或名称（无需 `org:` 等前缀）。
 
   ```
   google.com
-  ByteDance
+  北京字节跳动
   ```
 
-- **Rules Files (`dorks`)**: The program comes with built-in rule files located in the `Dorks` directory. You can choose which one to use based on your needs, for example:
+- **规则文件 (`dorks`)**: 程序内置了规则文件，位于安装目录下的 `Dorks` 文件夹中。您可以根据需要选择使用，例如：
 
-  - `alldorksv3.txt` (Most comprehensive rules)
-  - `medium_dorks.txt` (Medium set of rules)
-  - `smalldorks.txt` (Minimal set of rules)
+  - `alldorksv3.txt` (最全规则)
+  - `medium_dorks.txt` (中等规则)
+  - `smalldorks.txt` (精简规则)
 
-**2. Run Command**
-
-Use the following command format to run a scan:
+**2. 运行命令** 使用以下命令格式运行扫描：
 
 ```
-./GitFerret -tf <token_file> -tl <target_file> -d <dorks_file_path> [other_optional_flags]
+./GitFerret -tf <令牌文件> -tl <目标文件> -d <规则文件路径> [其他可选参数]
 ```
 
-**Example:**
+**示例**:
 
 ```
-# Use the alldorksv3.txt rules file from the Dorks folder
+# 使用 Dorks 文件夹下的 alldorksv3.txt 规则文件
 ./GitFerret.exe -d \GitFerret\Dorks\alldorksv3.txt -tl \GitFerret\tl.txt -tf \GitFerret\tf.txt
 ```
 
-<img width="2523" height="1296" alt="wechat_2025-09-12_144310_169" src="https://github.com/user-attachments/assets/65804779-d7e1-4868-8159-74b5a1d9c383" />
+<img width="2529" height="1292" alt="wechat_2025-09-12_151155_811" src="https://github.com/user-attachments/assets/af81dc12-09d1-474f-9d5a-6b2ed6ee0789" />
 
-**3. Command-Line Arguments**
+**3. 命令行参数说明**
 
-| Parameter | Required | Description                                         | Default Value             |
-| --------- | -------- | --------------------------------------------------- | ------------------------- |
-| `-tf`     | Yes      | Path to the file containing GitHub tokens.          |                           |
-| `-tl`     | Yes      | Path to the file containing multiple targets.       |                           |
-| `-d`      | Yes      | Path to the file containing multiple search dorks.  |                           |
-| `-t`      | No       | A single scan target (conflicts with `-tl`).        |                           |
-| `-k`      | No       | A single search keyword (conflicts with `-d`).      |                           |
-| `-o`      | No       | Output file path for scan results.                  | `GitHub_Scan_Results.txt` |
-| `-c`      | No       | Number of concurrent scanning threads.              | `10`                      |
-| `-i`      | No       | Interval in seconds between API requests.           | `3`                       |
-| `-w`      | No       | Waiting time in seconds when API rate limit is hit. | `65`                      |
+| 参数  | 必选 | 描述                            | 默认值               |
+| ----- | ---- | ------------------------------- | -------------------- |
+| `-tf` | 是   | 包含多个GitHub令牌的文件路径。  |                      |
+| `-tl` | 是   | 包含多个目标的文件路径。        |                      |
+| `-d`  | 是   | 包含多个搜索规则的文件路径。    |                      |
+| `-t`  | 否   | 单个扫描目标 (与 `-tl` 冲突)。  |                      |
+| `-k`  | 否   | 单个搜索关键词 (与 `-d` 冲突)。 |                      |
+| `-o`  | 否   | 扫描结果的输出文件路径。        | `GitHub扫描结果.txt` |
+| `-c`  | 否   | 并发扫描的线程数。              | `10`                 |
+| `-i`  | 否   | 每次API请求之间的间隔秒数。     | `3`                  |
+| `-w`  | 否   | 遇到API速率限制时的等待秒数。   | `65`                 |
 
-### 📄 Output Format
+📄 输出格式
 
-The scan results will be appended in real-time to the output file you specified, in the following format:
+扫描结果会实时追加到您指定的输出文件中，格式如下：
 
 ```
-Search Query: google.com filename:.env
-File Path: path/to/leaked/.env
-Match Reason: High-risk filename match: \.(env|pem|p12|pkcs12|pfx|asc|key)$
-File Link: [https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env](https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env)
+搜索语句: google.com filename:.env
+文件路径: path/to/leaked/.env
+匹配原因: 高危文件名匹配: \.(env|pem|p12|pkcs12|pfx|asc|key)$
+文件链接: [https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env](https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env)
 --------------------------------------------------
-Search Query: ByteDance "api_key"
-File Path: src/config/settings.py
-Match Reason: File content match: (?i)(api_key|...)\s*[:=]\s*['"](...)['"]
-File Link: [https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py](https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py)
+搜索语句: 北京字节跳动 "api_key"
+文件路径: src/config/settings.py
+匹配原因: 文件内容匹配: (?i)(api_key|...)\s*[:=]\s*['"](...)['"]
+文件链接: [https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py](https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py)
 --------------------------------------------------
 ```
 
-### ⚠️ Disclaimer
+⚠️ 免责声明
 
-This tool is intended for authorized security testing and educational purposes only. Please ensure that your use of this tool complies with local laws and regulations as well as GitHub's terms of service. The developers are not responsible for any legal liabilities or consequences resulting from the misuse of this tool.
+本工具仅供授权的安全测试和教育目的使用。请确保您在使用本工具时遵守当地法律法规以及GitHub的服务条款。对于任何因滥用本工具而导致的法律责任或后果，开发者概不负责。
