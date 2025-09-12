@@ -123,4 +123,4 @@ File Link: [https://github.com/user/another-repo/blob/commit-hash/src/config/set
 
 ### ⚠️ Disclaimer
 
-This tool is intended for authorized security testing and educational purposes only. Please ensure that your use of this tool complies with local laws and regulations as well as GitHub's terms of service. The developers are not responsible for any legal liabilities or consequences resulting from the misuse of this tool.的服务条款。对于任何因滥用本工具而导致的法律责任或后果，开发者概不负责。
+This tool is intended for authorized security testing and educational purposes only. Please ensure that your use of this tool complies with local laws and regulations as well as GitHub's terms of service. The developers are not responsible for any legal liabilities or consequences resulting from the misuse of this tool.
