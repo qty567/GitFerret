@@ -87,6 +87,7 @@ bash build.sh
 # 使用 Dorks 文件夹下的 alldorksv3.txt 规则文件
 ./>GitFerret.exe -d \GitFerret\Dorks\alldorksv3.txt -tl \GitFerret\tl.txt -tf \GitFerret\tf.txt
 ```
+![Uploading wechat_2025-09-12_130751_842.png…]()
 
 #### 3. 命令行参数说明
 
