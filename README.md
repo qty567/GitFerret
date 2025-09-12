@@ -45,7 +45,7 @@ go mod tidy
 bash build.sh 
 ```
 
-编译成功后，您将在release目录下看到一个名为 `GitFerret_amd_linux` (Linux/macOS) 、`GitFerret_darwin` (Linux/macOS) 、`GitFerret.exe` (Windows) 的可执行文件。
+编译成功后，您将在release目录下看到一个名为 `GitFerret_amd_linux` (Linux) 、`GitFerret_darwin` (macOS) 、`GitFerret.exe` (Windows) 的可执行文件。
 
 ## 🚀 使用方法
 
