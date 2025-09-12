@@ -4,8 +4,7 @@ GitFerret 是一款使用Go语言编写的命令行工具，旨在帮助安全�
 
 本工具的设计思想借鉴了 GitDorker 等优秀的开源项目，并在性能、并发处理和规则精确度上进行了大量优化，以实现更低的误报率和更稳定的扫描体验。
 
-[English](English/GitFerret
-/README.md)
+[English](English/GitFerret/README.md)
 
 ✨ 功能特性
 
