@@ -1,27 +1,27 @@
-# GitFerret - An Efficient GitHub Sensitive Information Scanning Tool
+# GitFerret - An Efficient GitHub Sensitive Information Scanner
 
 ## [中文](README.md)
 
-GitFerret is a command-line tool written in Go, designed to help security researchers and developers efficiently scan GitHub repositories for potential sensitive information leaks, such as API keys, passwords, and private keys, using custom search rules (Dorks).
+GitFerret is a command-line tool written in Go, designed to help security researchers and developers efficiently scan GitHub code repositories for potential sensitive information leaks, such as API keys, passwords, and private keys, using customizable search rules (Dorks).
 
-The design of this tool draws inspiration from excellent open-source projects like GitDorker, with significant optimizations in performance, concurrency handling, and rule precision to achieve a lower false positive rate and a more stable scanning experience.
+The design of this tool is inspired by excellent open-source projects like GitDorker, with significant optimizations in performance, concurrency, and rule precision to achieve a lower false-positive rate and a more stable scanning experience.
 
-### ✨ Features
+✨ Features
 
 - **High-Concurrency Scanning**: Leverages Go's concurrency features to support multi-threaded scanning tasks, greatly increasing scanning speed.
-- **Multi-Token Support**: Supports loading multiple GitHub Personal Access Tokens (PATs) from a file, effectively circumventing API rate limits by rotating through them.
-- **Flexible Targets & Rules**: Allows for batch importing of scanning targets (e.g., domains, company names) and search rules (Dorks) from files.
-- **Low False-Positive Rate**: Utilizes built-in, optimized, and stricter regular expression rules that distinguish between high-risk filenames and file contents, effectively reducing invalid alerts.
-- **Real-Time Results Output**: Any sensitive information found during the scan is immediately written to the specified output file without waiting for the task to complete.
-- **User-Friendly Progress Bar**: Intuitively displays the real-time progress of the scanning task, the number of completed items, and the estimated time remaining in the command line.
-- **Automatic Rate Limit Handling**: Can automatically detect GitHub API rate limits, wait silently in the background, and resume automatically once the limit is lifted, requiring no manual intervention.
-- **Smart Output Path**: Prioritizes saving the results file in the current directory. If a permission error is encountered, it will automatically attempt to save the file to your user home directory, ensuring the program runs smoothly.
+- **Multiple Token Support**: Supports loading multiple GitHub Personal Access Tokens (PATs) from a file, effectively circumventing API rate limits by rotating through them.
+- **Flexible Targets & Rules**: Supports batch importing of scan targets (e.g., domains, company names) from a file. Features three built-in dork sets (`small`, `medium`, `all`) that can be easily selected via a flag.
+- **High Precision & Low False-Positive Rate**: Implements a tuned strict detection mode that matches high-risk filenames, high-certainty key signatures (like AWS key formats), and common key-related keywords (like `api_key`) to significantly reduce false positives while maintaining a high recall rate.
+- **Real-time Output**: Any sensitive information found during the scan is immediately written to the specified output file without waiting for the task to complete.
+- **User-Friendly Progress Bar**: Intuitively displays the real-time progress of the scanning task, including completed items and estimated time remaining, directly in the command line.
+- **Automatic Rate Limit Handling**: Automatically detects GitHub API rate limits and waits silently in the background, resuming the task once the limit is reset without manual intervention.
+- **Intelligent Output Path**: Prioritizes saving the results file in the program's current directory. If a permission error occurs, it automatically attempts to save the file to your personal home directory to ensure the program runs smoothly.
 
-### 🛠️ Installation & Configuration
+🛠️ Installation & Setup
 
-**1. Environment Requirements**
+**1. Requirements**
 
-- Go programming language environment (version >= 1.16)
+- Go environment (version >= 1.18)
 
 **2. Download & Compile**
 
@@ -35,92 +35,88 @@ cd /path/to/your/project
 Download all dependencies:
 
 ```
-# Download dependencies
 go mod tidy
 ```
 
-Compile to generate the executable file:
+Compile the executable:
 
 ```
 bash build.sh
 ```
 
-After a successful compilation, you will find an executable file named `GitFerret_amd_linux` (Linux/macOS), `GitFerret_darwin` (macOS), or `GitFerret.exe` (Windows) in the `release` directory.
+After successful compilation, you will find an executable file named `GitFerret_amd_linux` (Linux), `GitFerret_darwin` (macOS), or `GitFerret.exe` (Windows) in the `release` directory.
 
-### 🚀 Usage
+🚀 Usage
 
 **1. Prepare Files**
 
 Before running the program, you need to prepare the following text files:
 
-- **Token File (`tf.txt`)**: Contains your GitHub Personal Access Tokens, one per line.
+- **Token file (`tf.txt`)**: Contains one GitHub Personal Access Token per line.
 
   ```
   ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   ghp_yyyyyyyyyyyyyyyyyyyyyyyyyyyyy
   ```
 
-- **Target File (`tl.txt`)**: Contains the scanning targets, one per line, such as a company domain or name (no prefixes like `org:` are needed).
+- **Target file (`tl.txt`)**: Contains one scan target per line, such as a company domain or name.
 
   ```
   google.com
-  ByteDance
+  Microsoft
   ```
 
-- **Rules Files (`dorks`)**: The program comes with built-in rule files located in the `Dorks` directory. You can choose which one to use based on your needs, for example:
-
-  - `alldorksv3.txt` (Most comprehensive rules)
-  - `medium_dorks.txt` (Medium set of rules)
-  - `smalldorks.txt` (Minimal set of rules)
-
-**2. Run Command**
+**2. Run the Command**
 
 Use the following command format to run a scan:
 
 ```
-./GitFerret -tf <token_file> -tl <target_file> -d <dorks_file_path> [other_optional_flags]
+./GitFerret -tf <token_file> -tl <target_file> -s <dork_set> [other_optional_flags]
 ```
 
-**Example:**
+**Examples**:
 
 ```
-# Use the alldorksv3.txt rules file from the Dorks folder
-./GitFerret.exe -d \GitFerret\Dorks\alldorksv3.txt -tl \GitFerret\tl.txt -tf \GitFerret\tf.txt
+# Scan using the medium dork set
+./GitFerret -tf tf.txt -tl tl.txt -s medium
+
+# Scan using the 'all' dork set with a concurrency of 20
+./GitFerret -tf tf.txt -tl tl.txt -s all -c 20
 ```
 
-<img width="2523" height="1296" alt="wechat_2025-09-12_144310_169" src="https://github.com/user-attachments/assets/aa158243-1f55-4229-b2a0-fcfa2d81345a" />
+<img width="2520" height="1011" alt="wechat_2025-09-12_192339_396" src="https://github.com/user-attachments/assets/b929eac3-7f89-47c1-8d53-a4b41ea46c79" />
+
 
 **3. Command-Line Arguments**
 
-| Parameter | Required | Description                                         | Default Value             |
-| --------- | -------- | --------------------------------------------------- | ------------------------- |
-| `-tf`     | Yes      | Path to the file containing GitHub tokens.          |                           |
-| `-tl`     | Yes      | Path to the file containing multiple targets.       |                           |
-| `-d`      | Yes      | Path to the file containing multiple search dorks.  |                           |
-| `-t`      | No       | A single scan target (conflicts with `-tl`).        |                           |
-| `-k`      | No       | A single search keyword (conflicts with `-d`).      |                           |
-| `-o`      | No       | Output file path for scan results.                  | `GitHub_Scan_Results.txt` |
-| `-c`      | No       | Number of concurrent scanning threads.              | `10`                      |
-| `-i`      | No       | Interval in seconds between API requests.           | `3`                       |
-| `-w`      | No       | Waiting time in seconds when API rate limit is hit. | `65`                      |
+| Flag  | Required | Description                                          | Default Value             |
+| ----- | -------- | ---------------------------------------------------- | ------------------------- |
+| `-tf` | Yes      | Path to the file containing GitHub tokens.           |                           |
+| `-tl` | Yes      | Path to the file containing multiple targets.        |                           |
+| `-s`  | No       | Dork set to use (options: `small`, `medium`, `all`). | `medium`                  |
+| `-t`  | No       | A single target to scan (conflicts with `-tl`).      |                           |
+| `-o`  | No       | Output file path for scan results.                   | `GitHub_Scan_Results.txt` |
+| `-c`  | No       | Number of concurrent scanning threads.               | `10`                      |
+| `-i`  | No       | Interval in seconds between each API request.        | `3`                       |
+| `-w`  | No       | Seconds to wait when the API rate limit is hit.      | `65`                      |
 
-### 📄 Output Format
+📄 Output Format
 
-The scan results will be appended in real-time to the output file you specified, in the following format:
+The scan results are appended in real-time to the output file you specify, in the following format:
 
 ```
-Search Query: google.com filename:.env
+Search Dork: google.com filename:.env
 File Path: path/to/leaked/.env
-Match Reason: High-risk filename match: \.(env|pem|p12|pkcs12|pfx|asc|key)$
-File Link: [https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env](https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env)
+Match Reason: High-confidence filename match: \.(env|pem|p12|pkcs12|pfx|asc|key)$
+File URL: [https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env](https://github.com/user/repo/blob/commit-hash/path/to/leaked/.env)
 --------------------------------------------------
-Search Query: ByteDance "api_key"
+Search Dork: Microsoft "api_key"
 File Path: src/config/settings.py
 Match Reason: File content match: (?i)(api_key|...)\s*[:=]\s*['"](...)['"]
-File Link: [https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py](https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py)
+File URL: [https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py](https://github.com/user/another-repo/blob/commit-hash/src/config/settings.py)
 --------------------------------------------------
 ```
 
-### ⚠️ Disclaimer
+⚠️ Disclaimer
 
-This tool is intended for authorized security testing and educational purposes only. Please ensure that your use of this tool complies with local laws and regulations as well as GitHub's terms of service. The developers are not responsible for any legal liabilities or consequences resulting from the misuse of this tool.
+This tool is intended for authorized security testing and educational purposes only. Ensure that your use of this tool complies with local laws and regulations, as well as GitHub's terms of service. The developer assumes no liability and is not responsible for any misuse or damage caused by this tool.
