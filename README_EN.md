@@ -6,19 +6,18 @@ GitFerret is a command-line tool written in Go, designed to help security resear
 
 The design of this tool is inspired by excellent open-source projects like GitDorker, with significant optimizations in performance, concurrency, and rule precision to achieve a lower false-positive rate and a more stable scanning experience.
 
-✨ Features
+### ✨ Features (English Version)
 
-- **High-Concurrency Scanning**: Leverages Go's concurrency features to support multi-threaded scanning tasks, greatly increasing scanning speed.
-- **Multiple Token Support**: Supports loading multiple GitHub Personal Access Tokens (PATs) from a file, effectively circumventing API rate limits by rotating through them.
-- **Flexible Targets & Rules**: Supports batch importing of scan targets (e.g., domains, company names) from a file. Features three built-in dork sets (`small`, `medium`, `all`) that can be easily selected via a flag.
-- **High Precision & Low False-Positive Rate**: Implements a tuned strict detection mode that matches high-risk filenames, high-certainty key signatures (like AWS key formats), and common key-related keywords (like `api_key`) to significantly reduce false positives while maintaining a high recall rate.
-- **Real-time Output**: Any sensitive information found during the scan is immediately written to the specified output file without waiting for the task to complete.
-- **User-Friendly Progress Bar**: Intuitively displays the real-time progress of the scanning task, including completed items and estimated time remaining, directly in the command line.
-- **Automatic Rate Limit Handling**: Automatically detects GitHub API rate limits and waits silently in the background, resuming the task once the limit is reset without manual intervention.
-- **Intelligent Output Path**: Prioritizes saving the results file in the program's current directory. If a permission error occurs, it automatically attempts to save the file to your personal home directory to ensure the program runs smoothly.
-- **Multi-Keyword File Query**: Supports batch importing of multiple search keywords from a file, enhancing the flexibility and efficiency of searches.
-- **Bilingual Support** (Chinese & English): Provides a complete user interface and documentation in both Chinese and English, making it convenient for users from different language backgrounds.
-- **Friendlier Output**: Optimizes the display format of scan results in both the command line and the output file, making the information clear and easy to locate and analyze.
+- **High-Concurrency & High-Performance**: Utilizes Go's concurrency features to support multi-threaded scanning, significantly increasing speed.
+- **Flexible Targets & Rules**: Supports batch importing of scan targets (e.g., domains, company names) and custom search keywords from files. Includes three built-in rule sets (`small`, `medium`, `all`) that can be selected via parameters.
+- **High Accuracy & Low False-Positive Rate**: Employs a fine-tuned, strict detection model by matching high-risk filenames, high-certainty key patterns, and common keywords to significantly reduce false positives.
+- **Robust API Rate-Limit Handling**: Supports multi-token rotation and automatically detects and silently handles GitHub API rate limits, ensuring stable and uninterrupted scans.
+- **Intelligent Result Presentation**:
+  - **Alert Aggregation**: Automatically consolidates multiple findings for the same file into a single alert for a cleaner report.
+  - **Real-Time Output**: Discovered secrets are immediately written to the output file without delay.
+  - **User-Friendly Interface**: Provides a clear command-line progress bar and optimized output formatting.
+  - **Smart Output Path**: Automatically attempts to save the results to the user's home directory if a permission error occurs in the default location.
+- **Bilingual Support**: Provides a complete user interface and documentation in both Chinese and English for users from different language backgrounds.
 
 🛠️ Installation & Setup
 
