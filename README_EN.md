@@ -16,6 +16,9 @@ The design of this tool is inspired by excellent open-source projects like GitDo
 - **User-Friendly Progress Bar**: Intuitively displays the real-time progress of the scanning task, including completed items and estimated time remaining, directly in the command line.
 - **Automatic Rate Limit Handling**: Automatically detects GitHub API rate limits and waits silently in the background, resuming the task once the limit is reset without manual intervention.
 - **Intelligent Output Path**: Prioritizes saving the results file in the program's current directory. If a permission error occurs, it automatically attempts to save the file to your personal home directory to ensure the program runs smoothly.
+- **Multi-Keyword File Query**: Supports batch importing of multiple search keywords from a file, enhancing the flexibility and efficiency of searches.
+- **Bilingual Support** (Chinese & English): Provides a complete user interface and documentation in both Chinese and English, making it convenient for users from different language backgrounds.
+- **Friendlier Output**: Optimizes the display format of scan results in both the command line and the output file, making the information clear and easy to locate and analyze.
 
 🛠️ Installation & Setup
 
